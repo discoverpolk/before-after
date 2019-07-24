@@ -3,7 +3,7 @@
 <head>
 <meta charset='UTF-8'>
 <meta http-equiv="Access-Control-Allow-Origin" content="*">
-<title>Graffiti - Discover Polk + Lower Polk</title>
+<title>Before & After</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="jquery/jquery-1.6.4.min.js"></script>
 
@@ -71,7 +71,7 @@ var map = L.map('mapdiv',{
   fullscreenControlOptions: {
     position: 'topleft'
   }
-} ).setView([37.793165, -122.422057], 17);
+} ).setView([37.673092, -122.084988], 17);
 
 
   var info_sidebar = document.createElement('div');
@@ -110,8 +110,8 @@ var monthSelectorOn = 0;
 var monthStats = {
 	"monthnum":[],
 	"month": ["","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-	"DP":[],
-	"LP":[],
+	"Z1":[],
+	"Z2":[],
 	"total":[]
 };
 
@@ -230,7 +230,7 @@ function setupMonthStats() {
 	var statsTable = document.createElement("table");
 	statsTable.innerHTML += "<tr><td>Month</td><td>DP</td><td>LP</td><td>All</td>";
 	for (i=3; i<=maxMonth; i++) {
-		statsTable.innerHTML += "<tr><td>" + monthStats.month[i] + "</td><td>" + monthStats.DP[i] + "</td><td>" + monthStats.LP[i] + "</td><td>" + monthStats.total[i] + "</td></tr>";
+		statsTable.innerHTML += "<tr><td>" + monthStats.month[i] + "</td><td>" + monthStats.Z1[i] + "</td><td>" + monthStats.Z2[i] + "</td><td>" + monthStats.total[i] + "</td></tr>";
 	
 	}
 
@@ -240,9 +240,9 @@ function setupMonthStats() {
 
 function getColor(a) {
 	switch (a) {
-	case 'Discover Polk':
+	case 'Zone 1':
       return '#027e9c';
-	case 'Lower Polk': 
+	case 'Zone 2': 
 	  return '#FAF13A';
     default:
       return '#444';
@@ -266,8 +266,8 @@ function disaggregate(e){
 	for (i=0; i<=12; i++) {
 		monthStats.monthnum.push(i);
 		monthStats.total[i] = 0;
-		monthStats.DP[i]=0;
-		monthStats.LP[i]=0;
+		monthStats.Z1[i]=0;
+		monthStats.Z2[i]=0;
 	}
 	
 	
@@ -282,12 +282,12 @@ function disaggregate(e){
 				maxMonth = e[i].Month;
 			}
 			
-			if (e[i].District == 'Lower Polk') {
-				monthStats.LP[p] +=1;
+			if (e[i].District == 'Zone 1') {
+				monthStats.Z1[p] +=1;
 			}
 
-			if (e[i].District == 'Discover Polk') {
-				monthStats.DP[p] +=1;
+			if (e[i].District == 'Zone 2') {
+				monthStats.Z2[p] +=1;
 			}			
 			
 			count+=1;
@@ -439,7 +439,7 @@ if (layerControlOn = false){
 function initGraf() {
 
 Tabletop.init({
-    	key: "https://docs.google.com/spreadsheets/d/1hOn8YeHsPdJYP3Fc50hybnEg5Wem3Qf2LsH8fKEpqnw/edit?usp=sharing",
+    	key: "https://docs.google.com/spreadsheets/d/16vPtqTVBC_OdmWQZ_SwyHXHXfEecOC_lypNIKi4Uw1U/edit?usp=sharing",
     	callback: loadGraf,
     	simpleSheet: true,
     	debug: false
