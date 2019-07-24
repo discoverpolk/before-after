@@ -33,6 +33,13 @@
     <script src="leaflet-sidebar/L.Control.Sidebar.js"></script>
 	<script src="button/leaflet-button.js"></script>
 
+  <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
+ 
+ <!-- Esri Leaflet Geocoder -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@2.2.6/dist/esri-leaflet-geocoder.css">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.6"></script>
+
   
   
  <!-- FontAaaawwwwesome -->  
@@ -252,6 +259,38 @@ function getColor(a) {
 	
 }
 
+map.on('click', function (e) {
+	lat = e.latlng.lat;
+	lng = e.latlng.lng;
+	
+	var popup = new L.popup({maxWidth:'140'}).setLatLng(e.latlng);
+	addStripped='';
+	var esriGeo = L.esri.Geocoding.reverseGeocode().latlng([lat, lng]).run(function(error, result, response){
+	var codeAddress = '';
+		if (result.address.Addr_type == 'POI') {
+			codeAddress = result.address.LongLabel;
+		}
+		
+		else {
+			codeAddress = result.address.Match_addr;
+		}
+		link='https://docs.google.com/forms/d/e/1FAIpQLSfPYsL--U15vW-8vCUokUtC5o-W3viX1FJadJRkoNa-1zvn0Q/viewform?usp=pp_url&entry.114398630=' + codeAddress + '&entry.1676608357=' + lat + '&entry.380005142='+lng;
+ 		function setPopup() {
+			
+				popupContent = 
+					"<h4><b><a style='text-decoration:none' target='_blank' href='"+ link + "'>ADD AN ISSUE!</a></b></h4>" +
+					"<hr>"+
+					codeAddress;
+				}			
+				setPopup();
+			popup.setContent(popupContent);
+			popup.openOn(map);
+			});
+			
+		});
+
+
+
 var count = 0;
 var maxMonth = 0;
 
@@ -309,9 +348,9 @@ function style(feature) {
 					fillColor: getColor(feature.properties.name),
 				};
 			}
-var cbdLayer = new L.geoJson;
+/* var cbdLayer = new L.geoJson;
 
-/* $.getJSON("https://discoverpolk.github.io/graffiti/polkcbds.geojson",
+$.getJSON("https://discoverpolk.github.io/graffiti/polkcbds.geojson",
             function(data) {
 	        cbdLayer = L.geoJson(data, {
 				style: style,
@@ -401,7 +440,7 @@ function displayGraf(data) {
 
 			
 			var content = 
-					"<b>"+ data[i].Date + "</b><br>" + data[i].Loc ;
+					"<b>"+ data[i].Timestamp + "</b><br>" + data[i].Location ;
 
 
 			graffiti.on('clusterclick', function (a) {
@@ -497,8 +536,8 @@ function displayInfo (a) {
 
 
 		var all = "<div style = 'padding:20px;font-size:110%; color:'#444'>" +
-		"<h4 style='margin-top:-10px'>" + info.Loc + "</h4>" + 
-		info.Date + "<br><hr>" + 
+		"<h4 style='margin-top:-10px'>" + info.Location + "</h4>" + 
+		info.Timestamp + "<br><hr>" + 
 		info.Description + 
 		"</div>";
 
@@ -533,5 +572,7 @@ function displayInfo (a) {
 
 </body>
 </html>
+
+
 
 
