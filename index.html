@@ -72,6 +72,10 @@
 // General note: TABLETOP, I love you. LOVE YOU.
 
 
+var currdate = new Date();
+var currmo = currdate.getMonth()+1;
+
+
 var map = L.map('mapdiv',{
   maxZoom: 20,
   fullscreenControl: true,
@@ -79,6 +83,10 @@ var map = L.map('mapdiv',{
     position: 'topleft'
   }
 } ).setView([37.673092, -122.084988], 17);
+
+var zf = document.getElementsByClassName("leaflet-control-zoom-fullscreen");
+zf[0].innerHTML = "<i class='fa fa-expand fa-2x' style='padding-top:3px;color:#444'>";
+
 
 
   var info_sidebar = document.createElement('div');
@@ -91,6 +99,17 @@ var map = L.map('mapdiv',{
   });
 	map.addControl(infoSidebar);
 
+cartoBase = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+	maxZoom:20,
+	attribution: 'created by ixd'
+});
+
+
+
+mapboxBase = L.tileLayer('https://api.mapbox.com/styles/v1/ixd-maps/cjyi3ti9l08zy1crm4dyjjcm0/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiaXhkLW1hcHMiLCJhIjoiY2p5aTN0Mzd3MDZkbzNpbnRiMG5uMWJhOSJ9.wV8VsOd5tquU3U-NCnoFQA', {
+	maxZoom:20,
+	attribution: 'iana dikidjieva with mapbox'
+});
 
 googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
 	maxZoom: 20,
@@ -104,9 +123,9 @@ googleStr = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
 	attribution: 'uses google streets'
 });
 
-googleStr.addTo(map);
+mapboxBase.addTo(map);
 
-var bases = {"Streets": googleStr};
+var bases = {"Streets": mapboxBase};
 
 overlayLayers = {}; 
 		<!-- don't forget to add any new layers to the menu! -->		
@@ -136,9 +155,11 @@ var monthControl = L.Control.extend({
 	container.style.backgroundColor = 'white';
     container.style.width = '30px';
     container.style.height = '30px';
-	container.style.backgroundImage = "url(calendar.png)";
-	container.style.backgroundRepeat = "no-repeat";
-	container.style.backgroundPosition = "2px 2px";
+//	container.style.backgroundImage = "url(calendar.png)";
+//	container.style.backgroundRepeat = "no-repeat";
+//	container.style.backgroundPosition = "2px 2px";
+
+	container.innerHTML = "<i class='fa fa-calendar-alt fa-2x' style='padding-left:4px;padding-top:3px;color:#444'>";
 
     container.onclick = function(){
 	
@@ -367,6 +388,7 @@ $.getJSON("https://discoverpolk.github.io/graffiti/polkcbds.geojson",
 
 
 
+
 var infoSidebarOn = false;
 var layerControlOn = false;
 var data = [];	
@@ -406,16 +428,34 @@ function filterData() {
 
 var graffiti = new L.markerClusterGroup({spiderfyDistanceMultiplier:2});
 
+function cleanlink(e) {
+
+var len = e.length;
+var pos = e.indexOf("=");
+var id = [];
+for (i=pos; i<len; i++) {
+ id+=e[i];
+}
+
+var cleanlink = "https://drive.google.com/thumbnail?id" + id + "&sz=w200";
+return cleanlink;
+
+}
+
+
 function displayGraf(data) {
 
 	graffiti.clearLayers();
 
 	for (i=0;i<=data.length-1;i++) {
 		if ((data[i].Lat !='#N/A') && (data[i].Lat !='#REF!')) {
+		
+			console.log("in!");
 			var lat = data[i].Lat;
 			var lng = data[i].Lng;
 			var latlng = [lat,lng];
-			var atype = data[i].a_type;
+
+//			var atype = data[i].a_type;
 			grafMarker = L.CircleMarker.extend({
 				options:{
 					data: []
@@ -423,24 +463,51 @@ function displayGraf(data) {
 			});
 			
 			if ((latlng != null)&&(lat != 'Loading...') && (lat != '#N/A')) {
+			console.log("in second if");
 			var marker = new grafMarker(latlng, {
 				radius: 10,
-				weight:2,
-				color:"#fff",
+				weight:5,
+				color:"#000",
 				opacity:.7,
 				fillOpacity: 0.7,
-				fillColor:"#3899d4",
+				fillColor:"#00FA9A",
 				data: data[i]
 				});
 				
 
 			graffiti.addLayer(marker);
 
-
-
 			
+
 			var content = 
 					"<b>"+ data[i].Timestamp + "</b><br>" + data[i].Location ;
+					
+/*	
+			var pod = document.createElement('div');
+			pod.className = 'assetPodSmall';
+			var beforelink = data[i].Before;
+			var afterlink = data[i].After;
+			
+			var beforeclean = cleanlink(beforelink);
+			var afterclean = cleanlink(afterlink);
+
+
+	
+			var beforeImg = document.createElement("img");
+			var afterImg = document.createElement("img");
+			
+			
+			beforeImg.className = 'assetPicSmall'; 
+			beforeImg.src = beforeclean;
+			afterImg.className = 'assetPicSmall'; 
+			afterImg.src = afterclean;
+			
+			pod.appendChild(beforeImg);
+			pod.appendChild(afterImg);
+			
+			document.getElementById("directoryBox").appendChild(pod);
+			
+*/			
 
 
 			graffiti.on('clusterclick', function (a) {
@@ -490,19 +557,7 @@ Tabletop.init({
 			
 
 
-function cleanlink(e) {
 
-var len = e.length;
-var pos = e.indexOf("=");
-var id = [];
-for (i=pos; i<len; i++) {
- id+=e[i];
-}
-
-var cleanlink = "https://drive.google.com/thumbnail?id" + id + "&sz=w200";
-return cleanlink;
-
-}
 
 
 
@@ -544,9 +599,9 @@ function displayInfo (a) {
 		var deets = document.createElement("div");
 		deets.innerHTML = all;
 		deets.style = "width:90%; float:left; z-index:999";
-		deets.appendChild(beforeText);
+//		deets.appendChild(beforeText);
 		deets.appendChild(beforeImg);
-		deets.appendChild(afterText);
+//		deets.appendChild(afterText);
 		deets.appendChild(afterImg);
 
 
@@ -572,6 +627,8 @@ function displayInfo (a) {
 
 </body>
 </html>
+
+
 
 
 
