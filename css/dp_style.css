@@ -37,13 +37,7 @@ td {border: solid 1px #eee; padding:5px;}
 height:auto !important;
 }
 
-.leaflet-pane .leaflet-tile-pane {
-    -webkit-filter: grayscale(100%);
-       -moz-filter: grayscale(100%);
-        -ms-filter: grayscale(100%);
-         -o-filter: grayscale(100%);
-            filter: grayscale(100%);
-}
+
 
 .imgcontain {
 
@@ -158,6 +152,9 @@ height:auto !important;
   height:30px;    
 } 
 
+.leaflet-control-zoom-out:link {color:#444;}
+.leaflet-control-zoom-in:link {color:#444;}
+
 
 .leaflet-control-layers-toggle {
 	background-image:none;
@@ -253,6 +250,7 @@ padding-right:10px;
 #infoSidebar {
 	padding:8px;
 	overflow-x:hidden;
+	border:solid 5px #fff;
 }
 
 .editlink {float:left;font-family:"bebas_neuebold", sans-serif; font-size:100%; letter-spacing:.1em;color:#444;}
@@ -275,7 +273,7 @@ padding-right:10px;
 .sitePic {width:300px; padding:20px;}
 .siteDesc {padding:10px;width:90%;margin-top:-20px;}
 
-.assetPodSmall{width:200px;height:240px;overflow-y:hidden;padding:10px;overflow-x:hidden;float:left;border: solid 2px #eee}
+.assetPodSmall{width:200px;height:220px;overflow-y:hidden;padding:10px;overflow-x:hidden;float:left;border: solid 2px #eee}
 .assetPodSmall h3 {color:#444}
 
 .imgcontainersmall{height:180px;width:180px;overflow:hidden;}
@@ -333,3 +331,4 @@ padding-right:10px;
 } 
   
 }
+
